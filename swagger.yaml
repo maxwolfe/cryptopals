@@ -39,3 +39,32 @@ paths:
             type: "string"
         "400":
           description: "Invalid hex string input"
+  /operate/xor/{first_hex}/{second_hex}:
+    get:
+      tags:
+        - "Set 1"
+      summary: "Return the XOR of two hex strings"
+      description: "Fixed XOR"
+      operationId: "controller.fixed_xor"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "path"
+          name: "first_hex"
+          description: "The first hex string to XOR"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "second_hex"
+          description: "The second hex string to XOR"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "Successfully converted to Base 64 string"
+          schema:
+            type: "string"
+        "400":
+          description: "First hex string is Invalid"
+        "401":
+          description: "Second hex string is Invalid"
