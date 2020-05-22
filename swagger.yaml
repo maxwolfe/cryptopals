@@ -61,10 +61,34 @@ paths:
           type: "string"
       responses:
         "200":
-          description: "Successfully converted to Base 64 string"
+          description: "Successfully computed XOR of both strings"
           schema:
             type: "string"
         "400":
           description: "First hex string is Invalid"
         "401":
           description: "Second hex string is Invalid"
+  /solve/single_byte_xor/{hex_ciphertext}:
+    get:
+      tags:
+        - "Set 1"
+      summary: "Solve a single-byte XOR cipher"
+      description: "Single-byte XOR"
+      operationId: "controller.single_byte_xor"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "path"
+          name: "hex_ciphertext"
+          description: "The hex ciphertext to decrypt"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "Found a solution"
+          schema:
+            type: "string"
+        "400":
+          description: "The hex string is Invalid"
+        "401":
+          description: "No solutions are found"
