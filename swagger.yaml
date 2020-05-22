@@ -1,0 +1,41 @@
+swagger: "2.0"
+info:
+  description: "This server hosts web API's for solving the [cryptopals crypto challenges](https://cryptopals.com/). Feel free to use these API's to your hearts content, although I recommend trying the problems for yourselves and only using this tool to check your answers. If you find an issue with the API's, or a substantially better way to solve a problem, don't hesitate to reach out."
+  version: "1.0.0"
+  title: "Wolfe's Crypto Pals"
+  contact:
+    email: "max@securitywolfe.com"
+  license:
+    name: "MIT License"
+    url: "https://raw.githubusercontent.com/maxwolfe/cryptopals/master/LICENSE"
+host: "cryptopals.securitywolfe.com"
+basePath: "/v2"
+tags:
+- name: "Set 1"
+  description: "Basics"
+schemes:
+- "https"
+- "http"
+paths:
+  /convert/hex2b64/{hex_str}:
+    get:
+      tags:
+      - "Set 1"
+      summary: "Convert a hexadecimal string to a Base64 string"
+      description: "Base 16 to Base 64 conversion"
+      operationId: "controller.hex_to_base64"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "hex_str"
+        description: "A hex string"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successfully converted to Base 64 string"
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid hex string input"
