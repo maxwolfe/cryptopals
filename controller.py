@@ -1,5 +1,6 @@
 from cryptopals import (
         conversions,
+        encrypters,
         solvers,
 )
 
@@ -57,7 +58,7 @@ def single_byte_xor(hex_ciphertext):
     try:
         return solvers.solve_single_byte_xor(hex_ciphertext), 200
     except ValueError:
-        return "Not a hex string", 400
+        return 'Not a hex string', 400
 
 
 def detect_single_byte_xor(ciphertext_file):
@@ -77,4 +78,27 @@ def detect_single_byte_xor(ciphertext_file):
     try:
         return solvers.detect_single_byte_xor(list_of_ciphertexts), 200
     except ValueError:
-        return "An entry is not a hex string", 400
+        return 'An entry is not a hex string', 400
+
+
+def repeated_key_xor(
+        plaintext,
+        key,
+):
+    '''
+    Encrypt plaintext with repeating key XOR cipher
+
+    :param plaintext: the text to encrypt
+    :param key: the key to use in encryption
+    :return: the corresponding ciphertext
+    '''
+
+    if not key:
+        return 'Invalid key', 400
+
+    return conversions.ascii_to_hex(
+            encrypters.repeated_key_xor(
+                plaintext,
+                key,
+            ),
+    ), 200

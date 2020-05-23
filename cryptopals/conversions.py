@@ -29,6 +29,23 @@ def hex_to_ascii(
         return binary_rep.decode('utf-8')
 
 
+def ascii_to_hex(
+        ascii_rep,
+):
+    '''
+    Convert an ascii string into hex representation
+
+    :param ascii_str: an ascii string
+    :return: a hex encoded string
+    '''
+
+    # Convert to bytes if input is a string
+    if isinstance(ascii_rep, str):
+        ascii_rep = ascii_rep.encode('utf-8')
+
+    return ascii_rep.hex()
+
+
 def ascii_to_base64(
         ascii_rep,
 ):
