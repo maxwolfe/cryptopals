@@ -5,6 +5,7 @@ from controller import (
         fixed_xor,
         single_byte_xor,
         detect_single_byte_xor,
+        repeated_key_xor,
 )
 from mock import (
         Mock,
@@ -104,5 +105,27 @@ def test_prob4_fail_1():
     bad_input.read.return_value = b'Hello, World\n'
 
     assert detect_single_byte_xor(
+            bad_input,
+    )[1] == 400
+
+
+# Set 1 : Problem 5
+def test_prob5_success():
+    cur_problem = io['Set1']['Problem5']
+    inputs = cur_problem['inputs']
+    output = cur_problem['output']
+
+    assert repeated_key_xor(
+            *inputs
+    ) == (output, 200)
+
+
+def test_prob5_fail_1():
+    cur_problem = io['Set1']['Problem5']
+    inputs = cur_problem['inputs']
+    bad_input = ""
+
+    assert repeated_key_xor(
+            inputs[0],
             bad_input,
     )[1] == 400

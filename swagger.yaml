@@ -114,3 +114,30 @@ paths:
             type: "string"
         "400":
           description: "A hex string is Invalid"
+  /encrypt/repeated_key_xor:
+    post:
+      tags:
+        - "Set 1"
+      summary: "Encrypt a given plaintext with repeated key XOR"
+      description: "Repeating-key XOR"
+      operationId: "controller.repeated_key_xor"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "formData"
+          name: "plaintext"
+          description: "The ascii plaintext to encrypt"
+          type: "string"
+        - in: "formData"
+          name: "key"
+          description: "The ascii key to use for encryption"
+          type: "string"
+      responses:
+        "200":
+          description: "Generated ciphertext"
+          schema:
+            type: "string"
+        "400":
+          description: "The chosen key is invalid"
