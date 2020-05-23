@@ -90,5 +90,27 @@ paths:
             type: "string"
         "400":
           description: "The hex string is Invalid"
-        "401":
-          description: "No solutions are found"
+  /solve/detect_single_byte_xor:
+    post:
+      tags:
+        - "Set 1"
+      summary: "Solve a single-byte XOR cipher for many ciphertexts"
+      description: "Detect Single-byte XOR in many ciphertexts"
+      operationId: "controller.detect_single_byte_xor"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "formData"
+          name: "ciphertext_file"
+          description: "A file including ciphertexts to decrypt"
+          required: true
+          type: "file"
+      responses:
+        "200":
+          description: "Found a solution"
+          schema:
+            type: "string"
+        "400":
+          description: "A hex string is Invalid"
