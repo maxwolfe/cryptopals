@@ -4,6 +4,10 @@ from controller import (
         hex_to_base64,
         fixed_xor,
         single_byte_xor,
+        detect_single_byte_xor,
+)
+from mock import (
+        Mock,
 )
 
 IO_FILE = 'tests/io/io.yaml'
@@ -79,5 +83,26 @@ def test_prob3_fail_1():
     bad_input = 'Hello, World!'
 
     assert single_byte_xor(
+            bad_input,
+    )[1] == 400
+
+
+# Set 1 : Problem 4
+def test_prob4_success():
+    cur_problem = io['Set1']['Problem4']
+    inputs = open(cur_problem['inputs'][0], 'rb')
+    output = cur_problem['output']
+
+    assert detect_single_byte_xor(
+            inputs,
+    ) == (output, 200)
+
+
+def test_prob4_fail_1():
+    cur_problem = io['Set1']['Problem4']
+    bad_input = Mock()
+    bad_input.read.return_value = b'Hello, World\n'
+
+    assert detect_single_byte_xor(
             bad_input,
     )[1] == 400

@@ -51,7 +51,6 @@ def single_byte_xor(hex_ciphertext):
     Solve single byte XOR cipher
 
     :param hex_ciphertext: ciphertext as a hex string
-
     :return: the original plaintext
     '''
 
@@ -59,5 +58,23 @@ def single_byte_xor(hex_ciphertext):
         return solvers.solve_single_byte_xor(hex_ciphertext), 200
     except ValueError:
         return "Not a hex string", 400
-    except IndexError:
-        return "No solutions found", 401
+
+
+def detect_single_byte_xor(ciphertext_file):
+    '''
+    Detect which ciphertext is single-byte encrypted
+
+    :param ciphertext_file: a file contianing possible encrypted strings
+    :return: the hidden plaintext
+    '''
+
+    # Convert byte file into list of strings
+    list_of_ciphertexts = map(
+            lambda x: x.decode('utf-8'),
+            ciphertext_file.read().split(b'\n')
+    )
+
+    try:
+        return solvers.detect_single_byte_xor(list_of_ciphertexts), 200
+    except ValueError:
+        return "An entry is not a hex string", 400
