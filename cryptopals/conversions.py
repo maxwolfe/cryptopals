@@ -8,7 +8,7 @@ from base64 import (
 
 def hex_to_ascii(
         hex_str,
-        ret_bytes=False,
+        ret_bytes=True,
 ):
     '''
     Convert a hex string into ascii representation
@@ -99,7 +99,6 @@ def hex_to_base64(
     # Raises ValueError if not hex
     ascii_rep = hex_to_ascii(
             hex_str,
-            ret_bytes=True,
     )
 
     return ascii_to_base64(

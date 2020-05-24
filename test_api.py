@@ -12,6 +12,7 @@ from controller import (
         repeated_key_xor,
         solve_repeated_key_xor,
         decrypt_aes_ecb,
+        detect_aes_ecb,
 )
 from mock import (
         Mock,
@@ -159,4 +160,15 @@ def test_prob7_success():
     assert decrypt_aes_ecb(
             input_file,
             input_key,
+    ) == (output, 200)
+
+
+# Set 1 : Problem 8
+def test_prob8_success():
+    cur_problem = io['Set1']['Problem8']
+    inputs = open(cur_problem['inputs'][0], 'rb')
+    output = open(cur_problem['output'], 'r').read().strip('\n')
+
+    assert detect_aes_ecb(
+            inputs,
     ) == (output, 200)

@@ -4,6 +4,9 @@ from cryptopals.conversions import (
 from functools import (
         partial,
 )
+from textwrap import (
+        wrap,
+)
 
 
 def score_letters(string):
@@ -99,10 +102,7 @@ def detect_single_byte_xor(list_of_ciphertexts):
     return find_best_plaintext(map(
             solve_single_byte_xor,
             map(
-                partial(
-                    hex_to_ascii,
-                    ret_bytes=True,
-                ),
+                hex_to_ascii,
                 list_of_ciphertexts,
             ),
     ))
@@ -232,4 +232,23 @@ def solve_repeated_key_xor(ciphertext):
     # Recombine best chunks
     return combine_by_key_size(
             best_chunks,
+    )
+
+
+def detect_aes_ecb(
+        list_of_ciphertexts,
+        block_size=16,
+):
+    '''
+    Detect which ciphertext has been encrypted with aes_ecb
+
+    :param list_of_ciphertexts: a list of hex encoded ciphertexts
+    :param block_size: size in bytes of each block (default 16)
+    :return: the most likely ciphertext encrypted with ecb
+    '''
+
+    return min(
+            list_of_ciphertexts.split(b'\n'),
+            key=lambda x: len(set(wrap(x.decode('utf-8'), block_size * 2))) - len(x) /
+            (block_size * 2),
     )
