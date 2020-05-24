@@ -194,3 +194,25 @@ paths:
             type: "string"
         "400":
           description: "A base64 string is Invalid"
+  /detect/aes_ecb:
+    post:
+      tags:
+        - "Set 1"
+      summary: "Detect which ciphertext has been encrypted with AES-ECB"
+      description: "Detect AES-ECB"
+      operationId: "controller.detect_aes_ecb"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "formData"
+          name: "ciphertext_file"
+          description: "A file including the base64 encoded ciphertext to decrypt"
+          required: true
+          type: "file"
+      responses:
+        "200":
+          description: "Found a solution"
+          schema:
+            type: "string"

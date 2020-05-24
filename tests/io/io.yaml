@@ -31,3 +31,7 @@ Set1:
       - "tests/io/set1_problem7.in"
       - "YELLOW SUBMARINE"
     output: "tests/io/set1_problem7.out"
+  Problem8:
+    inputs:
+      - "tests/io/set1_problem8.in"
+    output: "tests/io/set1_problem8.out"

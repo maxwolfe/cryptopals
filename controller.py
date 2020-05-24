@@ -77,7 +77,6 @@ def single_byte_xor(hex_ciphertext):
                 solvers.solve_single_byte_xor(
                     conversions.hex_to_ascii(
                         hex_ciphertext,
-                        ret_bytes=True,
                     ),
                 ),
         ), 200
@@ -173,3 +172,18 @@ def decrypt_aes_ecb(
         ), 200
     except ValueError:
         return 'The ciphertext or key are of incorrect size.', 400
+
+
+def detect_aes_ecb(ciphertext_file):
+    '''
+    Find the ciphertext file which is encrypted by AES-ECB
+
+    :param ciphertext_file: a file with a list of hex encoded ciphertext
+    :return: the most likely ciphertext that is AES-ECB encrypted
+    '''
+
+    return _sanitize_for_output(
+            solvers.detect_aes_ecb(
+                ciphertext_file.read(),
+            ),
+    ), 200
