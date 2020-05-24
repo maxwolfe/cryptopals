@@ -13,7 +13,13 @@ def _sanitize_for_output(iterable):
     :return: an ascii string
     '''
 
-    return b''.join(iterable).decode('utf-8')
+    if isinstance(iterable, list) or isinstance(iterable, map):
+        iterable = b''.join(iterable)
+
+    if isinstance(iterable, bytes):
+        iterable = iterable.decode('utf-8')
+
+    return iterable
 
 
 def hex_to_base64(hex_str):
@@ -142,3 +148,28 @@ def solve_repeated_key_xor(ciphertext_file):
         ), 200
     except ValueError:
         return 'The ciphertext is not a base64 string', 400
+
+
+def decrypt_aes_ecb(
+        ciphertext_file,
+        ascii_key,
+):
+    '''
+    Find the plaintext for an AES-ECB ciphertext
+
+    :param ciphertext_file: a file with the base64 encoded ciphertext
+    :param ascii_key: the ascii-encoded key
+    :return: the desired plaintext
+    '''
+
+    try:
+        return _sanitize_for_output(
+                encrypters.decrypt_aes_ecb(
+                    conversions.base64_to_ascii(
+                        ciphertext_file.read(),
+                    ),
+                    ascii_key.encode('utf-8'),
+                ),
+        ), 200
+    except ValueError:
+        return 'The ciphertext or key are of incorrect size.', 400

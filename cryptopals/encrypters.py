@@ -1,3 +1,8 @@
+from Cryptodome.Cipher import (
+        AES,
+)
+
+
 def repeated_key_xor(
         byte_string,
         byte_key,
@@ -15,3 +20,21 @@ def repeated_key_xor(
         xor_str += chr(ord(char) ^ ord(byte_key[idx % len(byte_key)]))
 
     return xor_str
+
+
+def decrypt_aes_ecb(
+        ciphertext,
+        key,
+):
+    '''
+    Decrypt AES-ECB with a known key
+
+    :param ciphertext: the ciphertext to decrypt
+    :param key: the secret key used for decryption
+    :return: the desired plaintext
+    '''
+
+    return AES.new(
+            key,
+            AES.MODE_ECB,
+    ).decrypt(ciphertext)
