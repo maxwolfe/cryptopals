@@ -5,6 +5,17 @@ from cryptopals import (
 )
 
 
+def _sanitize_for_output(iterable):
+    '''
+    Sanitize an iterble input to send
+
+    :param iterable: an unkown iterable to sanitize
+    :return: an ascii string
+    '''
+
+    return b''.join(iterable).decode('utf-8')
+
+
 def hex_to_base64(hex_str):
     '''
     Convert a hex string to a base64 encoded string
@@ -56,7 +67,14 @@ def single_byte_xor(hex_ciphertext):
     '''
 
     try:
-        return solvers.solve_single_byte_xor(hex_ciphertext), 200
+        return _sanitize_for_output(
+                solvers.solve_single_byte_xor(
+                    conversions.hex_to_ascii(
+                        hex_ciphertext,
+                        ret_bytes=True,
+                    ),
+                ),
+        ), 200
     except ValueError:
         return 'Not a hex string', 400
 
@@ -76,7 +94,9 @@ def detect_single_byte_xor(ciphertext_file):
     )
 
     try:
-        return solvers.detect_single_byte_xor(list_of_ciphertexts), 200
+        return _sanitize_for_output(
+                solvers.detect_single_byte_xor(list_of_ciphertexts),
+        ), 200
     except ValueError:
         return 'An entry is not a hex string', 400
 
@@ -102,3 +122,23 @@ def repeated_key_xor(
                 key,
             ),
     ), 200
+
+
+def solve_repeated_key_xor(ciphertext_file):
+    '''
+    Find the plaintext for a repeated key encrypted ciphertext
+
+    :param ciphertext_file: the ciphertext file encoded in base64
+    :return: the hidden plaintext
+    '''
+
+    try:
+        return _sanitize_for_output(
+                solvers.solve_repeated_key_xor(
+                    conversions.base64_to_ascii(
+                        ciphertext_file.read(),
+                    ),
+                ),
+        ), 200
+    except ValueError:
+        return 'The ciphertext is not a base64 string', 400

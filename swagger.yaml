@@ -141,3 +141,27 @@ paths:
             type: "string"
         "400":
           description: "The chosen key is invalid"
+  /solve/repeated_key_xor:
+    post:
+      tags:
+        - "Set 1"
+      summary: "Solve a repeated-key XOR cipher for large ciphertexts"
+      description: "Solve repeated-key XOR"
+      operationId: "controller.solve_repeated_key_xor"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "formData"
+          name: "ciphertext_file"
+          description: "A file including the base64 encoded ciphertext to decrypt"
+          required: true
+          type: "file"
+      responses:
+        "200":
+          description: "Found a solution"
+          schema:
+            type: "string"
+        "400":
+          description: "A base64 string is Invalid"

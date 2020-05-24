@@ -1,14 +1,20 @@
+import controller
 import yaml
 
+from base64 import (
+        b64decode,
+)
 from controller import (
         hex_to_base64,
         fixed_xor,
         single_byte_xor,
         detect_single_byte_xor,
         repeated_key_xor,
+        solve_repeated_key_xor,
 )
 from mock import (
         Mock,
+        patch,
 )
 
 IO_FILE = 'tests/io/io.yaml'
@@ -129,3 +135,14 @@ def test_prob5_fail_1():
             inputs[0],
             bad_input,
     )[1] == 400
+
+
+# Set 1 : Problem 6
+def test_prob6_success():
+    cur_problem = io['Set1']['Problem6']
+    inputs = open(cur_problem['inputs'][0], 'rb')
+    output = open(cur_problem['output'], 'r').read().strip('\n')
+
+    assert solve_repeated_key_xor(
+            inputs,
+    ) == (output, 200)
