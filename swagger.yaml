@@ -165,3 +165,32 @@ paths:
             type: "string"
         "400":
           description: "A base64 string is Invalid"
+  /decrypt/aes_ecb:
+    post:
+      tags:
+        - "Set 1"
+      summary: "Decrypt an AES-ECB encrypted ciphertext with a known key"
+      description: "Decrypt AES-ECB"
+      operationId: "controller.decrypt_aes_ecb"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "formData"
+          name: "ciphertext_file"
+          description: "A file including the base64 encoded ciphertext to decrypt"
+          required: true
+          type: "file"
+        - in: "formData"
+          name: "ascii_key"
+          description: "the ascii key to use for decryption"
+          type: "string"
+      responses:
+        "200":
+          description: "Found a solution"
+          schema:
+            type: "string"
+        "400":
+          description: "A base64 string is Invalid"
