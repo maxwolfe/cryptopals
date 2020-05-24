@@ -249,6 +249,7 @@ def detect_aes_ecb(
 
     return min(
             list_of_ciphertexts.split(b'\n'),
-            key=lambda x: len(set(wrap(x.decode('utf-8'), block_size * 2))) - len(x) /
+            key=lambda x: len(set(wrap(x.decode('utf-8'), block_size * 2))) -
+            len(x) /
             (block_size * 2),
     )
