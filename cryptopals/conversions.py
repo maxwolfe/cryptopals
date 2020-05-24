@@ -1,5 +1,8 @@
+import binascii
+
 from base64 import (
         b64encode,
+        b64decode,
 )
 
 
@@ -44,6 +47,22 @@ def ascii_to_hex(
         ascii_rep = ascii_rep.encode('utf-8')
 
     return ascii_rep.hex()
+
+
+def base64_to_ascii(
+        base64_str,
+):
+    '''
+    Convert a base64 string into ascii representation
+
+    :param base64_str: a base64 encoded string
+    :return: an ascii string
+    '''
+
+    try:
+        return b64decode(base64_str)
+    except binascii.Error as e:
+        raise ValueError(e)
 
 
 def ascii_to_base64(
