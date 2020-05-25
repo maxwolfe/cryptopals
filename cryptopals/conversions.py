@@ -8,28 +8,21 @@ from base64 import (
 
 def hex_to_ascii(
         hex_str,
-        ret_bytes=True,
 ):
     '''
     Convert a hex string into ascii representation
 
     :param hex_str: a hex string
-    :param ret_bytes: return a binary representation?
     :return: an ascii string
-
-    :exceptions: ValueError
     '''
 
-    # Raises ValueError if not hex
-    binary_rep = bytes.fromhex(
+    # Convert to string if bytes
+    if isinstance(hex_str, bytes):
+        hex_str = hex_str.decode('utf-8')
+
+    return bytes.fromhex(
             hex_str,
     )
-
-    # Return bytes or string based on input
-    if ret_bytes:
-        return binary_rep
-    else:
-        return binary_rep.decode('utf-8')
 
 
 def ascii_to_hex(
@@ -59,10 +52,11 @@ def base64_to_ascii(
     :return: an ascii string
     '''
 
-    try:
-        return b64decode(base64_str)
-    except binascii.Error as e:
-        raise ValueError(e)
+    # Convert to bytes if input is a string
+    if isinstance(base64_str, str):
+        base64_str = base64_str.encode('utf-8')
+
+    return b64decode(base64_str)
 
 
 def ascii_to_base64(
@@ -79,9 +73,7 @@ def ascii_to_base64(
     if isinstance(ascii_rep, str):
         ascii_rep = ascii_rep.encode('utf-8')
 
-    return b64encode(
-            ascii_rep,
-    ).decode('utf-8')
+    return b64encode(ascii_rep)
 
 
 def hex_to_base64(
@@ -92,15 +84,10 @@ def hex_to_base64(
 
     :param hex_str: a hex string
     :return: a base64 encoded string
-
-    :exceptions: ValueError
     '''
 
-    # Raises ValueError if not hex
-    ascii_rep = hex_to_ascii(
-            hex_str,
-    )
-
     return ascii_to_base64(
-            ascii_rep,
+            hex_to_ascii(
+                hex_str,
+            ),
     )
