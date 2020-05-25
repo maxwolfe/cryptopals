@@ -7,6 +7,13 @@ from functools import (
 from textwrap import (
         wrap,
 )
+from yaml import (
+        safe_load,
+)
+
+LETTER_FREQUENCY = safe_load(
+        open('cryptopals/data/letter_frequency.yaml', 'r'),
+)
 
 
 def score_letters(string):
@@ -16,37 +23,6 @@ def score_letters(string):
     :param string: input string to score
     :return: an arbitrary score for number of english letters
     '''
-
-    LETTER_FREQUENCY = {
-            # Frequency for space is arbitrary, but slightly higher than 'E'
-            b' ': 13.00,
-            b'E': 12.49,
-            b'T': 9.28,
-            b'A': 8.04,
-            b'O': 7.64,
-            b'I': 7.57,
-            b'N': 7.23,
-            b'S': 6.51,
-            b'R': 6.28,
-            b'H': 5.05,
-            b'L': 4.07,
-            b'D': 3.82,
-            b'C': 3.34,
-            b'U': 2.73,
-            b'M': 2.51,
-            b'F': 2.40,
-            b'P': 2.14,
-            b'G': 1.87,
-            b'W': 1.68,
-            b'Y': 1.66,
-            b'B': 1.48,
-            b'V': 1.05,
-            b'K': 0.54,
-            b'X': 0.23,
-            b'J': 0.16,
-            b'Q': 0.12,
-            b'Z': 0.09,
-    }
 
     return sum(map(
         lambda c: LETTER_FREQUENCY.get(c.upper(), 0),

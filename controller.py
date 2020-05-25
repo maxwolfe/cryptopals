@@ -122,10 +122,10 @@ def repeated_key_xor(
         return 'Invalid key', 400
 
     return conversions.ascii_to_hex(
-            encrypters.repeated_key_xor(
+            b''.join(encrypters.repeated_key_xor(
                 plaintext,
                 key,
-            ),
+            )),
     ), 200
 
 

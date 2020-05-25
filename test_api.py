@@ -4,171 +4,195 @@ import yaml
 from base64 import (
         b64decode,
 )
-from controller import (
-        hex_to_base64,
-        fixed_xor,
-        single_byte_xor,
-        detect_single_byte_xor,
-        repeated_key_xor,
-        solve_repeated_key_xor,
-        decrypt_aes_ecb,
-        detect_aes_ecb,
-)
 from mock import (
         Mock,
         patch,
 )
 
-IO_FILE = 'tests/io/io.yaml'
-io = yaml.safe_load(open(IO_FILE, 'r'))
+INPUT_FILE_FORMAT = "tests/io/set{set_num}/set{set_num}_problem{prob_num}.in"
+OUTPUT_FILE_FORMAT = "tests/io/set{set_num}/set{set_num}_problem{prob_num}.out"
 
 
-# Set 1 : Problem 1
+def get_io_files(
+        set_num,
+        prob_num,
+):
+    return (
+            open(
+                INPUT_FILE_FORMAT.format(
+                    set_num=set_num,
+                    prob_num=prob_num,
+                ),
+                'rb',
+            ),
+            open(
+                OUTPUT_FILE_FORMAT.format(
+                    set_num=set_num,
+                    prob_num=prob_num,
+                ),
+                'r',
+            ),
+    )
+
+
 def test_prob1_success():
-    cur_problem = io['Set1']['Problem1']
-    inputs = cur_problem['inputs']
-    output = cur_problem['output']
+    inputs, output = get_io_files(
+            set_num=1,
+            prob_num=1,
+    )
 
-    assert hex_to_base64(
-            *inputs
-    ) == (output, 200)
+    assert controller.hex_to_base64(
+            inputs.read().decode('utf-8').strip('\n'),
+    ) == (output.read().strip('\n'), 200)
 
 
 def test_prob1_fail_1():
-    cur_problem = io['Set1']['Problem1']
     bad_input = 'Hello, World!'
 
-    assert hex_to_base64(
+    assert controller.hex_to_base64(
             bad_input,
     )[1] == 400
 
 
 # Set 1 : Problem 2
 def test_prob2_success():
-    cur_problem = io['Set1']['Problem2']
-    inputs = cur_problem['inputs']
-    output = cur_problem['output']
+    inputs, output = get_io_files(
+            set_num=1,
+            prob_num=2,
+    )
 
-    assert fixed_xor(
-            *inputs
-    ) == (output, 200)
+    assert controller.fixed_xor(
+            *inputs.read().decode('utf-8').strip('\n').split('\n')
+    ) == (output.read().strip('\n'), 200)
 
 
 def test_prob2_fail_1():
-    cur_problem = io['Set1']['Problem2']
-    inputs = cur_problem['inputs']
+    inputs, output = get_io_files(
+            set_num=1,
+            prob_num=2,
+    )
     bad_input = 'Hello, World!'
 
-    assert fixed_xor(
+    assert controller.fixed_xor(
             bad_input,
-            inputs[1],
+            inputs.read().decode('utf-8').strip('\n').split('\n')[1],
     )[1] == 400
 
 
 def test_prob2_fail_2():
-    cur_problem = io['Set1']['Problem2']
-    inputs = cur_problem['inputs']
+    inputs, output = get_io_files(
+            set_num=1,
+            prob_num=2,
+    )
     bad_input = 'Hello, World!'
 
-    assert fixed_xor(
-            inputs[0],
+    assert controller.fixed_xor(
+            inputs.read().decode('utf-8').split('\n')[0],
             bad_input,
     )[1] == 401
 
 
 # Set 1 : Problem 3
 def test_prob3_success():
-    cur_problem = io['Set1']['Problem3']
-    inputs = cur_problem['inputs']
-    output = cur_problem['output']
+    inputs, output = get_io_files(
+            set_num=1,
+            prob_num=3,
+    )
 
-    assert single_byte_xor(
-            *inputs
-    ) == (output, 200)
+    assert controller.single_byte_xor(
+            inputs.read().decode('utf-8').strip('\n'),
+    ) == (output.read().strip('\n'), 200)
 
 
 def test_prob3_fail_1():
-    cur_problem = io['Set1']['Problem3']
     bad_input = 'Hello, World!'
 
-    assert single_byte_xor(
+    assert controller.single_byte_xor(
             bad_input,
     )[1] == 400
 
 
 # Set 1 : Problem 4
 def test_prob4_success():
-    cur_problem = io['Set1']['Problem4']
-    inputs = open(cur_problem['inputs'][0], 'rb')
-    output = cur_problem['output']
+    inputs, output = get_io_files(
+            set_num=1,
+            prob_num=4,
+    )
 
-    assert detect_single_byte_xor(
+    assert controller.detect_single_byte_xor(
             inputs,
-    ) == (output, 200)
+    ) == (output.read(), 200)
 
 
 def test_prob4_fail_1():
-    cur_problem = io['Set1']['Problem4']
     bad_input = Mock()
     bad_input.read.return_value = b'Hello, World\n'
 
-    assert detect_single_byte_xor(
+    assert controller.detect_single_byte_xor(
             bad_input,
     )[1] == 400
 
 
 # Set 1 : Problem 5
 def test_prob5_success():
-    cur_problem = io['Set1']['Problem5']
-    inputs = cur_problem['inputs']
-    output = cur_problem['output']
+    inputs, output = get_io_files(
+            set_num=1,
+            prob_num=5,
+    )
+    key = b'ICE'
 
-    assert repeated_key_xor(
-            *inputs
-    ) == (output, 200)
+    assert controller.repeated_key_xor(
+            inputs.read().strip(b'\n'),
+            key,
+    ) == (output.read().strip('\n'), 200)
 
 
 def test_prob5_fail_1():
-    cur_problem = io['Set1']['Problem5']
-    inputs = cur_problem['inputs']
+    inputs, output = get_io_files(
+            set_num=1,
+            prob_num=5,
+    )
     bad_input = ""
 
-    assert repeated_key_xor(
-            inputs[0],
+    assert controller.repeated_key_xor(
+            inputs,
             bad_input,
     )[1] == 400
 
 
 # Set 1 : Problem 6
 def test_prob6_success():
-    cur_problem = io['Set1']['Problem6']
-    inputs = open(cur_problem['inputs'][0], 'rb')
-    output = open(cur_problem['output'], 'r').read().strip('\n')
+    inputs, output = get_io_files(
+            set_num=1,
+            prob_num=6,
+    )
 
-    assert solve_repeated_key_xor(
+    assert controller.solve_repeated_key_xor(
             inputs,
-    ) == (output, 200)
+    ) == (output.read().strip('\n'), 200)
 
 
 # Set 1 : Problem 7
 def test_prob7_success():
-    cur_problem = io['Set1']['Problem7']
-    input_file = open(cur_problem['inputs'][0], 'rb')
-    input_key = cur_problem['inputs'][1]
-    output = open(cur_problem['output'], 'r').read().strip('\n')
+    inputs, output = get_io_files(
+            set_num=1,
+            prob_num=7,
+    )
+    key = "YELLOW SUBMARINE"
 
-    assert decrypt_aes_ecb(
-            input_file,
-            input_key,
-    ) == (output, 200)
+    assert controller.decrypt_aes_ecb(
+            inputs,
+            key,
+    ) == (output.read().strip('\n'), 200)
 
 
 # Set 1 : Problem 8
 def test_prob8_success():
-    cur_problem = io['Set1']['Problem8']
-    inputs = open(cur_problem['inputs'][0], 'rb')
-    output = open(cur_problem['output'], 'r').read().strip('\n')
+    inputs, output = get_io_files(
+            set_num=1,
+            prob_num=8,
+    )
 
-    assert detect_aes_ecb(
+    assert controller.detect_aes_ecb(
             inputs,
-    ) == (output, 200)
+    ) == (output.read().strip('\n'), 200)

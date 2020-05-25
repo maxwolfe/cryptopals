@@ -1,6 +1,9 @@
 from Cryptodome.Cipher import (
         AES,
 )
+from itertools import (
+        cycle,
+)
 
 
 def repeated_key_xor(
@@ -14,12 +17,11 @@ def repeated_key_xor(
     :param byte_key: a binary key to use for encryption/decryption
     '''
 
-    xor_str = ''
-
-    for idx, char in enumerate(byte_string):
-        xor_str += chr(ord(char) ^ ord(byte_key[idx % len(byte_key)]))
-
-    return xor_str
+    return map(
+            lambda c, k: (c ^ k).to_bytes(1, 'little'),
+            byte_string,
+            cycle(byte_key),
+    )
 
 
 def decrypt_aes_ecb(
