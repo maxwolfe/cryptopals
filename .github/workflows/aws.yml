@@ -23,7 +23,6 @@
 #    See the documentation for each action used below for the recommended IAM policies for this IAM user,
 #    and best practices on handling the access key credentials.
 
-# Test integration
 on:
   push:
     branches: [ master ]
