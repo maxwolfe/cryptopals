@@ -5,23 +5,26 @@ from cryptopals import (
 )
 
 
-def _sanitize_for_output(iterable):
+def sanitize(func):
     '''
-    Sanitize an iterble input to send
-
-    :param iterable: an unkown iterable to sanitize
-    :return: an ascii string
+    Sanitize binary data for output
     '''
 
-    if isinstance(iterable, list) or isinstance(iterable, map):
-        iterable = b''.join(iterable)
+    def wrapper(*args, **kwargs):
+        output, http_code = func(*args, **kwargs)
 
-    if isinstance(iterable, bytes):
-        iterable = iterable.decode('utf-8')
+        if isinstance(output, list) or isinstance(output, map):
+            output = b''.join(output)
 
-    return iterable
+        if isinstance(output, bytes):
+            output = output.decode('utf-8')
+
+        return output, http_code
+
+    return wrapper
 
 
+@sanitize
 def hex_to_base64(hex_str):
     '''
     Convert a hex string to a base64 encoded string
@@ -64,6 +67,7 @@ def fixed_xor(
     return hex(first_int ^ second_int)[2:], 200
 
 
+@sanitize
 def single_byte_xor(hex_ciphertext):
     '''
     Solve single byte XOR cipher
@@ -73,17 +77,16 @@ def single_byte_xor(hex_ciphertext):
     '''
 
     try:
-        return _sanitize_for_output(
-                solvers.solve_single_byte_xor(
-                    conversions.hex_to_ascii(
-                        hex_ciphertext,
-                    ),
+        return solvers.solve_single_byte_xor(
+                conversions.hex_to_ascii(
+                    hex_ciphertext,
                 ),
         ), 200
     except ValueError:
         return 'Not a hex string', 400
 
 
+@sanitize
 def detect_single_byte_xor(ciphertext_file):
     '''
     Detect which ciphertext is single-byte encrypted
@@ -92,15 +95,9 @@ def detect_single_byte_xor(ciphertext_file):
     :return: the hidden plaintext
     '''
 
-    # Convert byte file into list of strings
-    list_of_ciphertexts = map(
-            lambda x: x.decode('utf-8'),
-            ciphertext_file.read().split(b'\n')
-    )
-
     try:
-        return _sanitize_for_output(
-                solvers.detect_single_byte_xor(list_of_ciphertexts),
+        return solvers.detect_single_byte_xor(
+                ciphertext_file.read().split(b'\n'),
         ), 200
     except ValueError:
         return 'An entry is not a hex string', 400
@@ -129,6 +126,7 @@ def repeated_key_xor(
     ), 200
 
 
+@sanitize
 def solve_repeated_key_xor(ciphertext_file):
     '''
     Find the plaintext for a repeated key encrypted ciphertext
@@ -138,17 +136,16 @@ def solve_repeated_key_xor(ciphertext_file):
     '''
 
     try:
-        return _sanitize_for_output(
-                solvers.solve_repeated_key_xor(
-                    conversions.base64_to_ascii(
-                        ciphertext_file.read(),
-                    ),
+        return solvers.solve_repeated_key_xor(
+                conversions.base64_to_ascii(
+                    ciphertext_file.read(),
                 ),
         ), 200
     except ValueError:
         return 'The ciphertext is not a base64 string', 400
 
 
+@sanitize
 def decrypt_aes_ecb(
         ciphertext_file,
         ascii_key,
@@ -162,18 +159,17 @@ def decrypt_aes_ecb(
     '''
 
     try:
-        return _sanitize_for_output(
-                encrypters.decrypt_aes_ecb(
-                    conversions.base64_to_ascii(
-                        ciphertext_file.read(),
-                    ),
-                    ascii_key.encode('utf-8'),
+        return encrypters.decrypt_aes_ecb(
+                conversions.base64_to_ascii(
+                    ciphertext_file.read(),
                 ),
+                ascii_key.encode('utf-8'),
         ), 200
     except ValueError:
         return 'The ciphertext or key are of incorrect size.', 400
 
 
+@sanitize
 def detect_aes_ecb(ciphertext_file):
     '''
     Find the ciphertext file which is encrypted by AES-ECB
@@ -182,8 +178,6 @@ def detect_aes_ecb(ciphertext_file):
     :return: the most likely ciphertext that is AES-ECB encrypted
     '''
 
-    return _sanitize_for_output(
-            solvers.detect_aes_ecb(
-                ciphertext_file.read(),
-            ),
+    return solvers.detect_aes_ecb(
+            ciphertext_file.read().strip(b'\n'),
     ), 200
