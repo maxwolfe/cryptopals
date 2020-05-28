@@ -14,10 +14,12 @@ phases:
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
-    - docker build -t $REPOSITORY_URI:latest .
-    - docker tag $REPOSITORY_URI:lates $REPOSITORY_URI:$IMAGE_TAG
+    commands:
+      - docker build -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
-    - docker push $REPOSITORY_URI:latest
-    - docker push $REPOSITORY_URI:$IMAGE_TAG
+    commands:
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
 
 

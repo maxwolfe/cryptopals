@@ -201,6 +201,7 @@ def pad_to_pkcs7(
                 conversions.pad_pkcs7(
                     string_to_pad,
                     length_to_pad,
-        )), 200
+                ),
+        ), 200
     except ValueError:
         return 'The given length to pad is invalid', 400
