@@ -13,6 +13,8 @@ basePath: "/v2"
 tags:
 - name: "Set 1"
   description: "Basics"
+- name: "Set 2"
+  description: "Block Crypto"
 schemes:
 - "https"
 - "http"
@@ -216,3 +218,30 @@ paths:
           description: "Found a solution"
           schema:
             type: "string"
+  /pad/pkcs7:
+    post:
+      tags:
+        - "Set 2"
+      summary: "Pad a string to a given length with PKCS#7 Padding"
+      description: "Pad with PKCS#7"
+      operationId: "controller.pad_to_pkcs7"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "formData"
+          name: "string_to_pad"
+          description: "the string to pad"
+          type: "string"
+        - in: "formData"
+          name: "length_to_pad"
+          description: "the length to pad the string to"
+          type: "integer"
+      responses:
+        "200":
+          description: "Successfully padded the string"
+          schema:
+            type: "string"
+        "400":
+          description: "The length to pad to is invalid"

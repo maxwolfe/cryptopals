@@ -91,3 +91,26 @@ def hex_to_base64(
                 hex_str,
             ),
     )
+
+
+def pad_pkcs7(
+        string_to_pad,
+        length_to_pad,
+):
+    '''
+    Pad a binary string with PKCS#7 up to a defined length
+
+    :param string_to_pad: a string to pad
+    :param length_to_pad: the length to pad the string to
+    :return: a new binary string padded to the defined length
+    '''
+
+    if isinstance(string_to_pad, str):
+        string_to_pad = string_to_pad.encode('utf-8')
+
+    pad_length = length_to_pad - len(string_to_pad)
+
+    if pad_length > 0xff:
+        raise ValueError('Cannot pad beyond byte-length')
+
+    return string_to_pad + bytes([pad_length]) * pad_length
