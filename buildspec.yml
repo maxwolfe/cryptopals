@@ -14,7 +14,6 @@ phases:
       - IMAGE_TAG=${COMMIT_HASH:=latest}
       - apt-get update
       - apt-get install docker
-      - service docker start
       - $(aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin $REPOSITORY_URI)
   build:
     commands:
