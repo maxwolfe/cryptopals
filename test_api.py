@@ -1,5 +1,4 @@
 import controller
-import yaml
 
 from base64 import (
         b64decode,
@@ -8,9 +7,10 @@ from mock import (
         Mock,
         patch,
 )
+from yaml import safe_load
 
-INPUT_FILE_FORMAT = "tests/io/set{set_num}/set{set_num}_problem{prob_num}.in"
-OUTPUT_FILE_FORMAT = "tests/io/set{set_num}/set{set_num}_problem{prob_num}.out"
+INPUT_FILE_FORMAT = 'tests/io/set{set_num}/set{set_num}_problem{prob_num}.in'
+OUTPUT_FILE_FORMAT = 'tests/io/set{set_num}/set{set_num}_problem{prob_num}.out'
 
 
 def get_io_files(
@@ -152,7 +152,7 @@ def test_prob5_fail_1():
             set_num=1,
             prob_num=5,
     )
-    bad_input = ""
+    bad_input = ''
 
     assert controller.repeated_key_xor(
             inputs,
@@ -178,7 +178,7 @@ def test_prob7_success():
             set_num=1,
             prob_num=7,
     )
-    key = "YELLOW SUBMARINE"
+    key = 'YELLOW SUBMARINE'
 
     assert controller.decrypt_aes_ecb(
             inputs,
@@ -196,3 +196,46 @@ def test_prob8_success():
     assert controller.detect_aes_ecb(
             inputs,
     ) == (output.read().strip('\n'), 200)
+
+
+# Set 2 : Problem 1
+def test_prob9_success():
+    inputs, output = get_io_files(
+            set_num=2,
+            prob_num=1,
+    )
+
+    input_dict = safe_load(inputs.read())
+
+    assert controller.pad_to_pkcs7(
+            input_dict.get('string_to_pad'),
+            input_dict.get('length_to_pad'),
+    ) == (output.read().strip('\n'), 200)
+
+
+def test_prob9_fail_1():
+    inputs, output = get_io_files(
+            set_num=2,
+            prob_num=1,
+    )
+
+    input_dict = safe_load(inputs.read())
+
+    assert controller.pad_to_pkcs7(
+            input_dict.get('string_to_pad'),
+            -1,
+    )[1] == 400
+
+
+def test_prob9_fail_2():
+    inputs, output = get_io_files(
+            set_num=2,
+            prob_num=1,
+    )
+
+    input_dict = safe_load(inputs.read())
+
+    assert controller.pad_to_pkcs7(
+            input_dict.get('string_to_pad'),
+            500,
+    )[1] == 400

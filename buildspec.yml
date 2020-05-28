@@ -8,3 +8,16 @@ phases:
       - pip install -r requirements.txt
       - pytest
       - pycodestyle cryptopals/
+      - aws --version
+      - $(aws ecr get-login --region us-east-2 --no-include-email)
+      - REPOSITORY_URI=698202155810.dkr.ecr.us-east-2.amazonaws.com/cryptopals
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+  build:
+    - docker build -t $REPOSITORY_URI:latest .
+    - docker tag $REPOSITORY_URI:lates $REPOSITORY_URI:$IMAGE_TAG
+  post_build:
+    - docker push $REPOSITORY_URI:latest
+    - docker push $REPOSITORY_URI:$IMAGE_TAG
+
+

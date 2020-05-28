@@ -181,3 +181,26 @@ def detect_aes_ecb(ciphertext_file):
     return solvers.detect_aes_ecb(
             ciphertext_file.read().strip(b'\n'),
     ), 200
+
+
+@sanitize
+def pad_to_pkcs7(
+        string_to_pad,
+        length_to_pad,
+):
+    '''
+    Pad a binary string with PKCS#7 up to a defined length
+
+    :param string_to_pad: a string to pad
+    :param length_to_pad: the length to pad the string to
+    :return: a new base64 encoded string padded to the defined length
+    '''
+
+    try:
+        return conversions.ascii_to_base64(
+                conversions.pad_pkcs7(
+                    string_to_pad,
+                    length_to_pad,
+        )), 200
+    except ValueError:
+        return 'The given length to pad is invalid', 400
