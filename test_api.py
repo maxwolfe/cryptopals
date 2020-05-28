@@ -9,8 +9,8 @@ from mock import (
 )
 from yaml import safe_load
 
-INPUT_FILE_FORMAT = 'tests/io/set{set_num}/set{set_num}_problem{prob_num}.in'
-OUTPUT_FILE_FORMAT = 'tests/io/set{set_num}/set{set_num}_problem{prob_num}.out'
+INPUT_FILE_FORMAT = 'tests/io/set{set_num}/problem{prob_num}.in'
+OUTPUT_FILE_FORMAT = 'tests/io/set{set_num}/problem{prob_num}.out'
 
 
 def get_io_files(
@@ -202,7 +202,7 @@ def test_prob8_success():
 def test_prob9_success():
     inputs, output = get_io_files(
             set_num=2,
-            prob_num=1,
+            prob_num=9,
     )
 
     input_dict = safe_load(inputs.read())
@@ -216,7 +216,7 @@ def test_prob9_success():
 def test_prob9_fail_1():
     inputs, output = get_io_files(
             set_num=2,
-            prob_num=1,
+            prob_num=9,
     )
 
     input_dict = safe_load(inputs.read())
@@ -230,7 +230,7 @@ def test_prob9_fail_1():
 def test_prob9_fail_2():
     inputs, output = get_io_files(
             set_num=2,
-            prob_num=1,
+            prob_num=9,
     )
 
     input_dict = safe_load(inputs.read())
