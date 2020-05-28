@@ -12,7 +12,6 @@ phases:
       - REPOSITORY_URI=698202155810.dkr.ecr.us-east-2.amazonaws.com/cryptopals
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
-      - service docker start
       - $(aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin $REPOSITORY_URI)
   build:
     commands:
